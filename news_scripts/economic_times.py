@@ -1,9 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-import requests
-from bs4 import BeautifulSoup
-import json
+
 
 def get_articles(topic):
     url = f"https://economictimes.indiatimes.com/topic/{topic}"
@@ -16,7 +14,7 @@ def get_articles(topic):
     if script:
         try:
             data = json.loads(script.string)
-            items = data.get('itemListElement', [])[:3]  
+            items = data.get('itemListElement', [])[:1]  
             
             results = []
             for item in items:
@@ -25,11 +23,11 @@ def get_articles(topic):
                     'url': item.get('url')
                 })
                 
-            print("First 3 search results:")
-            print(json.dumps(results, indent=2))
             articles=[]
             for i in results:
                 articles.append(scrape_article(i['url']))
+            return articles[0]
+            
         except json.JSONDecodeError:
             print("Error parsing JSON data")
     else:
@@ -47,7 +45,6 @@ def scrape_article(url):
             data = json.loads(script.string)
             article_body = data.get('articleBody', '')
 
-            print(article_body)
             return article_body
             print("-----\n")
         except json.JSONDecodeError:
@@ -55,5 +52,3 @@ def scrape_article(url):
             return None
     else:
         print("NewsArticle schema not found")
-def filter_topic(topic):
-    return topic.replace(" ", "+")

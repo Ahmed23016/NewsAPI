@@ -11,8 +11,7 @@ def get_news_title(soup):
     return soup.find("a",class_="JtKRv")
 def get_authors(soup):
     return soup.find("div",class_="vr1PYe")
-def main():
-    topic = "trump crypto scam"
+def main(topic):
     url = get_url(topic)
     print("Searching URL:", url)
 
@@ -22,12 +21,9 @@ def main():
     soup = BeautifulSoup(response.text, "html.parser")
 
     titles=[]
-    print("Page Title:", soup.title.string if soup.title else "No title found")
     cols=get_cols(soup)
     for i in cols:
         titles.append({"Title":get_news_title(i).text,"Author":get_authors(i).text})
-    for i in titles:
-        print(i)
+    return titles[:1]
 
-if __name__ == "__main__":
-    main()
+
